@@ -21,7 +21,30 @@ class User extends Authenticatable
         'name','email','password','type','photo','bio'
     ];
 
-    
+     public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+    public function jobOffers()
+    {
+        return $this->hasMany(job_offer::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    public function sentFriendRequests()
+    {
+        return $this->hasMany(Friendship::class, 'sender_id');
+    }
+
+    public function receivedFriendRequests()
+    {
+        return $this->hasMany(Friendship::class, 'receiver_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
