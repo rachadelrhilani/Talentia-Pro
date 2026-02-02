@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class application extends Model
+class Application extends Model
 {
     protected $fillable = ['job_offer_id','user_id','status'];
 
     public function jobOffer()
     {
-        return $this->belongsTo(job_offer::class);
+        return $this->belongsTo(Joboffer::class);
     }
 
     public function candidate()

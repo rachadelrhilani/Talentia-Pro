@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class experience extends Model
+class Experience extends Model
 {
     protected $fillable = ['profile_id','position','company','start_date','end_date'];
 

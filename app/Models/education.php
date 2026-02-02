@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class education extends Model
+class Education extends Model
 {
     protected $fillable = ['profile_id','degree','school','year_start','year_end'];
 

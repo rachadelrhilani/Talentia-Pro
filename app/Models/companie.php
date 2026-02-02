@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class companie extends Model
+class Companie extends Model
 {
     protected $fillable = ['user_id','name','description','logo'];
 
@@ -15,6 +15,6 @@ class companie extends Model
 
     public function jobOffers()
     {
-        return $this->hasMany(job_offer::class);
+        return $this->hasMany(Joboffer::class);
     }
 }
