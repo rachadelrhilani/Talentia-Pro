@@ -4,7 +4,7 @@
 <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
     <h2 class="text-xl font-bold mb-4">Login</h2>
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('loginForm') }}">
         @csrf
 
         <input type="email" name="email" placeholder="Email"

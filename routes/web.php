@@ -7,8 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', [AuthController::class, 'loginForm'])->name('loginForm');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/', [AuthController::class, 'loginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('loginForm');
 
 Route::get('/register', [AuthController::class, 'registerForm'])->name('registerForm');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
