@@ -1,19 +1,24 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Auth;
 
+Route::middleware('guest')->group(function () {
 Route::get('/', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('loginForm');
 
 Route::get('/register', [AuthController::class, 'registerForm'])->name('registerForm');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+});
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
