@@ -6,14 +6,12 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        $user = auth()->user();
+   public function index()
+   {
+        if (auth()->user()->hasRole('recruteur')) {
+            return view('dashboards.recruteur');
+        }
 
-        return match (true) {
-            $user->hasRole('recruteur') => view('dashboards.recruteur'),
-            $user->hasRole('candidat')  => view('dashboards.candidat'),
-            default => abort(403),
-        };
+        return view('dashboards.candidat');
     }
 }
