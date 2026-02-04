@@ -23,6 +23,10 @@
                         <span class="text-[11px] text-gray-500 font-bold uppercase">Relations</span>
                         <span class="text-xs text-[#0a66c2] font-bold group-hover:underline">{{ $friendsCount ?? 0 }}</span>
                     </a>
+                    <a href="{{ route('candidat.applications') }}" class="px-4 py-2 flex justify-between hover:bg-gray-100 transition group border-t border-gray-50">
+                        <span class="text-[11px] text-gray-500 font-bold uppercase">Mes candidatures</span>
+                        <span class="text-xs text-[#0a66c2] font-bold group-hover:underline">Voir tout</span>
+                    </a>
                 </div>
 
                 <a href="{{ route('profile.show') }}" class="border-t border-gray-200 px-4 py-3 flex items-center hover:bg-blue-50 transition group">

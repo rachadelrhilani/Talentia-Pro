@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use App\Models\Joboffer;
 use Illuminate\Http\Request;
 
@@ -49,6 +50,8 @@ class JobOfferController extends Controller
 
         return redirect()->route('recruteur.jobs.index');
     }
+   
+
 
     public function close(Joboffer $job)
     {

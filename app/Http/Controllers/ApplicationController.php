@@ -29,4 +29,16 @@ class ApplicationController extends Controller
         $applications = auth()->user()->applications;
         return view('candidat.applications.index', compact('applications'));
     }
+    public function updateStatus(Request $request, Application $application)
+    {
+        $request->validate([
+            'status' => 'required|in:accepted,rejected'
+        ]);
+
+        $application->update([
+            'status' => $request->status
+        ]);
+
+        return back()->with('success', 'Statut mis à jour');
+    }
 }
