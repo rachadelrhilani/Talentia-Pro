@@ -19,18 +19,16 @@ class JobofferFactory extends Factory
     public function definition(): array
     {
        // On récupère spécifiquement le recruteur 5
-$recruiter = User::role('recruteur')->find(5);
+$recruiter = User::role('recruteur')->find(2);
 
 // On récupère l'entreprise qui appartient à ce recruteur spécifique
-$company = Companie::where('user_id', 5)->first();
+$company = Companie::where('user_id', 2)->first();
 
 return [
-    // On lie l'offre à l'entreprise du recruteur 5
-    // Si l'entreprise n'existe pas encore, on prend une entreprise au hasard par sécurité
     'company_id' => $company->id ?? Companie::inRandomOrder()->value('id'),
     
     // On force l'ID du recruteur à 5
-    'user_id' => 5,
+    'user_id' => 2,
 
     'title' => fake()->randomElement([
         'Développeur Fullstack Laravel React',

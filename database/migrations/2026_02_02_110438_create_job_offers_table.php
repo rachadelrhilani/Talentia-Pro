@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->enum('contract_type', ['CDI', 'CDD', 'Stage', 'Freelance', 'Full-time']);
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->boolean('is_closed')->default(false);
             $table->timestamps();
         });
