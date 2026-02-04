@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Joboffer extends Model
 {
+    use HasFactory;
     protected $table = 'job_offers'; 
     protected $fillable = [
         'company_id','user_id','title','description',
@@ -24,6 +26,6 @@ class Joboffer extends Model
 
     public function applications()
     {
-        return $this->hasMany(Application::class);
+        return $this->hasMany(Application::class,"job_offer_id");
     }
 }

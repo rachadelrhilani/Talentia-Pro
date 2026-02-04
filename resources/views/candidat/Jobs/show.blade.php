@@ -48,9 +48,6 @@
                             Candidature simplifiée
                         </button>
                     </form>
-                    <button class="border border-[#0a66c2] text-[#0a66c2] font-bold py-2.5 px-6 rounded-full hover:bg-blue-50 transition duration-200">
-                        Enregistrer
-                    </button>
                 </div>
             </div>
 
