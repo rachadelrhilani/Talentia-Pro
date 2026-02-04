@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\skill;
 use Illuminate\Http\Request;
 
 class UserProfileController extends Controller
@@ -15,10 +16,26 @@ class UserProfileController extends Controller
 
     public function edit()
     {
-        return view('profile.edit', [
-            'user' => auth()->user()
-        ]);
+        $user = auth()->user();
+
+        if ($user->hasRole('candidat')) {
+            $profile = $user->profile()->with([
+                'educations',
+                'experiences',
+                'skills'
+            ])->first();
+
+            $skills = skill::all();
+
+            return view('profile.edit', compact('profile', 'skills'));
+        }
+
+        if ($user->hasRole('recruteur')) {
+            $company = $user->company;
+            return view('profile.edit', compact('company'));
+        }
     }
+
 
     public function update(Request $request)
     {
