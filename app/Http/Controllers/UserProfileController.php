@@ -41,9 +41,7 @@ class UserProfileController extends Controller
     {
         $user = auth()->user();
 
-        // ========================
-        // Validation commune USER
-        // ========================
+        
         $data = $request->validate([
             'name'  => 'required|string|max:255',
             'bio'   => 'nullable|string',
@@ -57,26 +55,20 @@ class UserProfileController extends Controller
             'company_description' => 'nullable|string',
         ]);
 
-        // ========================
-        // Upload photo
-        // ========================
+        
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')
                 ->store('profiles', 'public');
         }
 
-        // ========================
-        // UPDATE USER (commun)
-        // ========================
+       
         $user->update([
             'name'  => $data['name'],
             'bio'   => $data['bio'] ?? null,
             'photo' => $data['photo'] ?? null ,
         ]);
 
-        // ========================
-        // UPDATE CANDIDAT
-        // ========================
+        
         if ($user->hasRole('candidat')) {
 
             $profile = $user->profile;
@@ -88,9 +80,7 @@ class UserProfileController extends Controller
             }
         }
 
-        // ========================
-        // UPDATE RECRUTEUR
-        // ========================
+       
         if ($user->hasRole('recruteur')) {
 
             $company = $user->company;
