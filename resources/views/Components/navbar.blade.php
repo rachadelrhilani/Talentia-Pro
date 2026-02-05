@@ -16,21 +16,33 @@
 
             {{-- SEARCH --}}
             <div class="hidden md:block relative">
-                <input type="text" placeholder="Recherche"
-                    class="bg-[#edf3f8] border-none rounded text-sm w-64 py-2 pl-10 focus:ring-black focus:w-80 transition-all duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-2.5 text-gray-600"
-                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
+                <form action="{{ route('users.index') }}" method="GET"
+                    class="hidden md:block relative">
+
+                    <input type="text"
+                        name="search"
+                        placeholder="Recherche utilisateur..."
+                        value="{{ request('search') }}"
+                        class="bg-[#edf3f8] border-none rounded text-sm w-64 py-2 pl-10
+                  focus:ring-black focus:w-80 transition-all duration-300">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 absolute left-3 top-2.5 text-gray-600"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </form>
+
             </div>
 
             {{-- ACCUEIL --}}
             <a href="{{ route('dashboard') }}"
-               class="flex flex-col items-center text-gray-600 hover:text-black transition">
+                class="flex flex-col items-center text-gray-600 hover:text-black transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor"
-                     viewBox="0 0 24 24">
-                    <path d="M23 9v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9l10-7z"/>
+                    viewBox="0 0 24 24">
+                    <path d="M23 9v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9l10-7z" />
                 </svg>
                 <span class="text-[11px] hidden md:block">Accueil</span>
             </a>
@@ -38,12 +50,12 @@
             {{-- OFFRES --}}
             @role('candidat')
             <a href="{{ route('candidat.jobs.index') }}"
-               class="flex flex-col items-center text-gray-600 hover:text-black transition">
+                class="flex flex-col items-center text-gray-600 hover:text-black transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor"
-                     viewBox="0 0 24 24">
+                    viewBox="0 0 24 24">
                     <path d="M20 6h-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4
                     a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8
-                    a2 2 0 0 0-2-2z"/>
+                    a2 2 0 0 0-2-2z" />
                 </svg>
                 <span class="text-[11px] hidden md:block">Offres</span>
             </a>
@@ -52,10 +64,10 @@
             {{-- OFFRES RECRUTEUR --}}
             @role('recruteur')
             <a href="{{ route('recruteur.jobs.index') }}"
-               class="flex flex-col items-center text-gray-600 hover:text-black transition">
+                class="flex flex-col items-center text-gray-600 hover:text-black transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor"
-                     viewBox="0 0 24 24">
-                    <path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/>
+                    viewBox="0 0 24 24">
+                    <path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" />
                 </svg>
                 <span class="text-[11px] hidden md:block">Mes Offres</span>
             </a>
@@ -64,13 +76,13 @@
             {{-- AMIS (CANDIDAT) --}}
             @role('candidat')
             <a href="{{ route('candidat.friends') }}"
-               class="flex flex-col items-center text-gray-600 hover:text-black transition">
+                class="flex flex-col items-center text-gray-600 hover:text-black transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor"
-                     viewBox="0 0 24 24">
+                    viewBox="0 0 24 24">
                     <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3
                     1.34-3 3 1.34 3 3 3zM8 11c1.66 0
                     3-1.34 3-3S9.66 5 8 5 5
-                    6.34 5 8s1.34 3 3 3z"/>
+                    6.34 5 8s1.34 3 3 3z" />
                 </svg>
                 <span class="text-[11px] hidden md:block">Amis</span>
             </a>
@@ -84,23 +96,23 @@
                 <div class="flex items-center space-x-1">
                     <span class="text-[11px] hidden md:block">Vous</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3"
-                         viewBox="0 0 20 20" fill="currentColor">
+                        viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10
+                            d="M5.293 7.293a1 1 0 011.414 0L10
                               10.586l3.293-3.293a1 1 0 111.414
                               1.414l-4 4a1 1 0 01-1.414
                               0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"/>
+                            clip-rule="evenodd" />
                     </svg>
                 </div>
 
                 <div class="absolute right-0 top-10 w-40 bg-white shadow-lg rounded border hidden group-hover:block">
                     <a href="{{ route('profile.show') }}"
-                       class="block px-4 py-2 text-sm hover:bg-gray-100">Profil</a>
+                        class="block px-4 py-2 text-sm hover:bg-gray-100">Profil</a>
 
                     @role('recruteur')
                     <a href="{{ route('recruteur.company.edit') }}"
-                       class="block px-4 py-2 text-sm hover:bg-gray-100">Entreprise</a>
+                        class="block px-4 py-2 text-sm hover:bg-gray-100">Entreprise</a>
                     @endrole
 
                     <form action="{{ route('logout') }}" method="POST">
@@ -113,15 +125,15 @@
             </div>
 
             @else
-                <a href="{{ route('login') }}"
-                   class="text-gray-500 hover:text-gray-800 font-semibold px-4 py-2">
-                    S'identifier
-                </a>
-                <a href="{{ route('registerForm') }}"
-                   class="border-2 border-[#0a66c2] text-[#0a66c2]
+            <a href="{{ route('login') }}"
+                class="text-gray-500 hover:text-gray-800 font-semibold px-4 py-2">
+                S'identifier
+            </a>
+            <a href="{{ route('registerForm') }}"
+                class="border-2 border-[#0a66c2] text-[#0a66c2]
                    hover:bg-blue-50 font-semibold px-5 py-2 rounded-full transition">
-                    S'inscrire
-                </a>
+                S'inscrire
+            </a>
             @endauth
         </div>
     </div>
