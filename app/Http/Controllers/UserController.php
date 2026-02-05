@@ -23,5 +23,17 @@ class UserController extends Controller
 
     return view('users.index',compact('users'));
 }
+public function show(User $user)
+{
+    $user->load([
+        'profile.skills',
+        'profile.educations',
+        'profile.experiences',
+        'company'
+    ]);
+
+    return view('users.show',compact('user'));
+}
+
 
 }
