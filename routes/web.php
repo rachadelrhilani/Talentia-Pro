@@ -31,16 +31,17 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware('auth')->group(function () {
 
-    // Profil personnel
+
+    // profil personnel
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 
-    // Mot de passe
+    // mot de passe
     Route::get('/profile/password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('/profile/password', [PasswordController::class, 'update'])->name('password.update');
 
-    // Recherche utilisateurs
+    // recherche utilisateurs
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 });
@@ -50,16 +51,17 @@ Route::middleware(['auth', 'role:candidat'])
     ->group(function () {
 
 
-        // Offres
+        // offres
         Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
         Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
 
-        // Postuler
+        // postuler
         Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('jobs.apply');
-
-        // Amis
+        Route::get('/applications', [ApplicationController::class, 'getapp'])
+            ->name('applications');
+        // amis
         Route::get('/friends', [FriendshipController::class, 'index'])->name('friends');
-        Route::post('/friends/{user}', [FriendshipController::class, 'send']);
+        Route::post('/friends/{user}', [FriendshipController::class, 'send'])->name("send");
         Route::post('/friends/{friendship}/accept', [FriendshipController::class, 'accept']);
         Route::post('/friends/{friendship}/reject', [FriendshipController::class, 'reject']);
     });
@@ -69,19 +71,19 @@ Route::middleware(['auth', 'role:recruteur'])
     ->name('recruteur.')
     ->group(function () {
 
-        // Entreprise
+        // entreprise
         Route::get('/company/edit', [CompanyController::class, 'edit'])->name('company.edit');
 
-        // Offres
+        // offres
         Route::resource('/jobs', JobOfferController::class);
 
-        // Candidatures
+        // candidatures
         Route::get(
             '/jobs/{job}/applications',
             [ApplicationController::class, 'index']
         )->name('jobs.applications');
 
-        // Clôturer offre
+        // cloturer offre
         Route::post(
             '/jobs/{job}/close',
             [JobOfferController::class, 'close']
