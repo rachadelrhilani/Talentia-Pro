@@ -49,17 +49,16 @@
 
                 <div class="flex items-center space-x-2">
                     @if($friend->status == 'pending')
-                    @if($friend->status == 'pending')
                     <div class="flex items-center gap-2">
 
-                        <form action="{{ route('candidat.reject', $friend->id) }}" method="POST">
+                        <form action="{{ route('candidat.reject', $friend->friendship_id) }}" method="POST">
                             @csrf
                             <button type="submit" class="text-gray-500 font-bold hover:bg-gray-100 px-4 py-1.5 rounded-full text-sm transition border border-gray-300">
                                 Ignorer
                             </button>
                         </form>
 
-                        <form action="{{ route('candidat.accept', $friend->id) }}" method="POST">
+                        <form action="{{ route('candidat.accept', $friend->friendship_id) }}" method="POST">
                             @csrf
                             <button type="submit" class="bg-[#0a66c2] text-white font-bold px-4 py-1.5 rounded-full text-sm hover:bg-[#004182] transition shadow-sm">
                                 Accepter
@@ -67,7 +66,6 @@
                         </form>
 
                     </div>
-                    @endif
                     @else
                     <button class="border border-gray-400 text-gray-600 font-bold px-4 py-1.5 rounded-full text-sm hover:bg-gray-100 transition">
                         Message

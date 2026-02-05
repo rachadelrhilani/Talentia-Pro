@@ -62,8 +62,8 @@ Route::middleware(['auth', 'role:candidat'])
         // amis
         Route::get('/friends', [FriendshipController::class, 'index'])->name('friends');
         Route::post('/friends/{user}', [FriendshipController::class, 'send'])->name("send");
-        Route::post('/friends/{friendship}/accept', [FriendshipController::class, 'accept']);
-        Route::post('/friends/{friendship}/reject', [FriendshipController::class, 'reject']);
+        Route::post('/friends/{friendship}/accept', [FriendshipController::class, 'accept'])->name('accept');
+        Route::post('/friends/{friendship}/reject', [FriendshipController::class, 'reject'])->name('reject');
     });
 
 Route::middleware(['auth', 'role:recruteur'])
