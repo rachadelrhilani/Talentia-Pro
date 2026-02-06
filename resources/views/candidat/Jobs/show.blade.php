@@ -18,7 +18,6 @@
         
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             
-            {{-- 1. Banner Image de l'offre --}}
             @if($job->image)
             <div class="w-full h-64 bg-gray-200 overflow-hidden">
                 <img src="{{ asset('storage/' . $job->image) }}" alt="{{ $job->title }}" class="w-full h-full object-cover">
@@ -38,10 +37,10 @@
                                 · {{ $job->location ?? 'Maroc' }}
                             </p>
 
-                            {{-- 3. Salaire Dynamique --}}
+                           
                             @if($job->salary)
                             <div class="mt-2 inline-block bg-emerald-50 text-emerald-700 px-3 py-1 rounded-md text-sm font-bold border border-emerald-100">
-                                💰 {{ $job->salary }}
+                                {{ $job->salary }}
                             </div>
                             @endif
 
