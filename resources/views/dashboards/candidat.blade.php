@@ -9,13 +9,13 @@
                 <div class="h-16 bg-gradient-to-r from-[#a0b4b7] to-[#d1dce0]"></div>
                 
                 <div class="px-4 -mt-8 mb-4 flex flex-col items-center border-b border-gray-100 pb-4">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random" 
+                    <img src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=0a66c2&color=fff' }}" 
                          class="w-16 h-16 rounded-full border-2 border-white shadow-md" alt="Avatar">
                     
                     <h2 class="mt-3 font-bold text-gray-900 hover:underline cursor-pointer leading-tight text-center">
                         {{ auth()->user()->name }}
                     </h2>
-                    <p class="text-[11px] text-gray-500 text-center mt-1 font-medium">Étudiant à YouCode / Développeur Fullstack</p>
+                    <p class="text-[11px] text-gray-500 text-center mt-1 font-medium">{{auth()->user()->bio}}</p>
                 </div>
 
                 <div class="py-2">
