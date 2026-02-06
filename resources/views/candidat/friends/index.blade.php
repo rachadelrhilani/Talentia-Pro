@@ -20,7 +20,7 @@
 
                 <div class="flex items-center space-x-4">
                     <div class="relative">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($friend->name ?? 'User') }}&background=random&size=128"
+                        <img src="{{ auth()->user()->photo ? asset('storage/' . $friend->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(friend->name) . '&background=0a66c2&color=fff' }}"
                             class="w-16 h-16 rounded-full border border-gray-200 shadow-sm" alt="Avatar">
                         <div class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
                     </div>

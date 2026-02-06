@@ -30,11 +30,11 @@
                         </div>
 
                         <div>
-                            @if($app->status == 'accepté' || $app->status == 'approved')
+                            @if($app->status == 'accepted')
                                 <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200 uppercase tracking-tighter">
                                     Accepté
                                 </span>
-                            @elseif($app->status == 'refusé' || $app->status == 'rejected')
+                            @elseif($app->status == 'rejected')
                                 <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200 uppercase tracking-tighter">
                                     Refusé
                                 </span>
