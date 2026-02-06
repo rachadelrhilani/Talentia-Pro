@@ -30,8 +30,8 @@
                     </div>
                 </div>
 
-                <a href="{{ route('recruteur.company.edit') }}" class="border-t border-gray-200 px-4 py-3 flex items-center justify-center hover:bg-blue-50 transition group">
-                    <span class="text-xs font-bold text-[#0a66c2]">Accéder aux outils de marque</span>
+                <a href="{{ route('profile.show') }}" class="border-t border-gray-200 px-4 py-3 flex items-center justify-center hover:bg-blue-50 transition group">
+                    <span class="text-xs font-bold text-[#0a66c2]">Accéder Profile</span>
                 </a>
             </div>
         </div>

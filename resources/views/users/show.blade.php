@@ -71,7 +71,7 @@
         @endif
 
     </div>
-    @if(auth()->id() !== $user->id && $user->hasRole('candidat') && auth()->user()->hasRole('candidat'))
+@if(auth()->id() !== $user->id && $user->hasRole('candidat') && auth()->user()->hasRole('candidat'))
     <form action="{{ route('candidat.send', $user->id) }}" method="POST">
         @csrf
         <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-sm flex items-center gap-2">

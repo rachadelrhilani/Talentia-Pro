@@ -38,15 +38,17 @@
             </div>
 
             <div>
-               <label class="block text-sm font-semibold text-gray-700 mb-1">Compétences (Multi-select)</label>
-               <select name="skills[]" multiple class="w-full border border-gray-300 p-2.5 rounded-lg h-32">
+               <label class="block text-sm font-semibold text-gray-700 mb-1">Compétences</label>
+               {{-- Zdna id="skills-select" --}}
+               <select name="skills[]" id="skills-select" multiple class="w-full border border-gray-300 p-2.5 rounded-lg h-32">
                   @foreach($skills as $skill)
-                  <option value="{{ $skill->id }}" @if(isset($profile) && $profile->skills->contains($skill->id)) selected @endif>
+                  <option value="{{ $skill->id }}"
+                     @if(isset($profile) && $profile->skills->contains($skill->id)) selected @endif>
                      {{ $skill->name }}
                   </option>
                   @endforeach
                </select>
-               <p class="text-xs text-gray-400 mt-1 italic">Maintenez 'Ctrl' (ou 'Cmd' sur Mac) pour sélectionner plusieurs.</p>
+               <p class="text-xs text-gray-400 mt-1 italic">Choisissez dans la liste ou tapez une nouvelle compétence puis appuyez sur "Entrée".</p>
             </div>
             {{-- Experience Section --}}
             <div class="space-y-4">

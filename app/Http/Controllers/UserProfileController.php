@@ -16,8 +16,8 @@ class UserProfileController extends Controller
         // Kan-zido l-valeurs li khasshom i-kouno ila mal9ach l-profile
         $profile = $user->profile()->with(['educations', 'experiences', 'skills'])
             ->firstOrCreate(
-                ['user_id' => $user->id], // Bach kiy-chercher
-                ['title' => 'Candidat']    // Bach kiy-insery (zid title hna!)
+                ['user_id' => $user->id], 
+                ['title' => 'Candidat']   
             );
 
         $skills = skill::all();
@@ -27,7 +27,7 @@ class UserProfileController extends Controller
     if ($user->hasRole('recruteur')) {
         $company = $user->company()->firstOrCreate(
             ['user_id' => $user->id],
-            ['name' => 'Nom de l\'entreprise'] // Nafs l-film hna ila kan l-name NOT NULL
+            ['name' => 'Nom de l\'entreprise'] 
         );
         return view('profile.show', compact('user', 'company'));
     }
