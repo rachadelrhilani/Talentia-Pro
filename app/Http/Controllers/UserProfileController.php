@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Models\skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -41,36 +42,12 @@ class UserProfileController extends Controller
         abort(403, "You Don't have any Roles. Please Contact Your Admin. (-");
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
         $user = auth()->user();
 
 
-        $data = $request->validate([
-            'name'  => 'required|string|max:255',
-            'bio'   => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
-
-            // Candidat Profile & Skills
-            'title'  => 'nullable|string|max:255',
-            'skills' => 'nullable|array',
-
-            // Experience
-            'exp_position'   => 'nullable|string|max:255',
-            'exp_company'    => 'nullable|string|max:255',
-            'exp_start_date' => 'nullable|date',
-            'exp_end_date'   => 'nullable|date|after_or_equal:exp_start_date',
-
-            // Education
-            'edu_degree'     => 'nullable|string|max:255',
-            'edu_school'     => 'nullable|string|max:255',
-            'edu_year_start' => 'nullable|integer|min:1900|max:' . date('Y'),
-            'edu_year_end'   => 'nullable|integer|min:1900|max:2099',
-
-            // Recruteur
-            'company_name'        => 'nullable|string|max:255',
-            'company_description' => 'nullable|string',
-        ]);
+        $data = $request->validated();
 
 
         if ($request->hasFile('photo')) {
