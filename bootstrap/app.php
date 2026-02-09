@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Security Headers Middleware
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+
+        // Input Sanitization Middleware
+        $middleware->append(\App\Http\Middleware\SanitizeInput::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
