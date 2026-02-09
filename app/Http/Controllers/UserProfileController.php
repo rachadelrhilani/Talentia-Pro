@@ -9,34 +9,43 @@ use Illuminate\Support\Facades\Storage;
 class UserProfileController extends Controller
 {
     public function show()
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    if ($user->hasRole('candidat')) {
-        $profile = $user->profile()->with(['educations', 'experiences', 'skills'])
-            ->firstOrCreate(
-                ['user_id' => $user->id], 
-                ['title' => 'Candidat']   
+        // users who registered when roles were missing
+        if ($user->roles->isEmpty() && $user->type) {
+            $user->assignRole($user->type);
+            $user->refresh();
+        }
+
+        if ($user->hasRole('candidat')) {
+            $profile = $user->profile()->with(['educations', 'experiences', 'skills'])
+                ->firstOrCreate(
+                    ['user_id' => $user->id],
+                    ['title' => 'Candidat']
+                );
+
+            $skills = skill::all();
+            return view('profile.show', compact('user', 'profile', 'skills'));
+        }
+
+        if ($user->hasRole('recruteur')) {
+            $company = $user->company()->firstOrCreate(
+                ['user_id' => $user->id],
+                ['name' => 'Nom de l\'entreprise']
             );
+            return view('profile.show', compact('user', 'company'));
+        }
 
-        $skills = skill::all();
-        return view('profile.show', compact('user', 'profile', 'skills'));
+        // Fallback if no role is assigned
+        abort(403, "You Don't have any Roles. Please Contact Your Admin. (-");
     }
-
-    if ($user->hasRole('recruteur')) {
-        $company = $user->company()->firstOrCreate(
-            ['user_id' => $user->id],
-            ['name' => 'Nom de l\'entreprise'] 
-        );
-        return view('profile.show', compact('user', 'company'));
-    }
-}
 
     public function update(Request $request)
     {
         $user = auth()->user();
 
-        
+
         $data = $request->validate([
             'name'  => 'required|string|max:255',
             'bio'   => 'nullable|string',
@@ -55,7 +64,7 @@ class UserProfileController extends Controller
             // Education
             'edu_degree'     => 'nullable|string|max:255',
             'edu_school'     => 'nullable|string|max:255',
-            'edu_year_start' => 'nullable|integer|min:1900|max:'.date('Y'),
+            'edu_year_start' => 'nullable|integer|min:1900|max:' . date('Y'),
             'edu_year_end'   => 'nullable|integer|min:1900|max:2099',
 
             // Recruteur
@@ -63,21 +72,23 @@ class UserProfileController extends Controller
             'company_description' => 'nullable|string',
         ]);
 
-        
+
         if ($request->hasFile('photo')) {
-            if ($user->photo) { Storage::disk('public')->delete($user->photo); }
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
+            }
             $photoPath = $request->file('photo')->store('profiles', 'public');
             $user->photo = $photoPath;
         }
 
-        
+
         $user->name = $data['name'];
         $user->bio = $data['bio'];
         $user->save();
 
         if ($user->hasRole('candidat')) {
             $profile = $user->profile()->firstOrCreate(['user_id' => $user->id]);
-            
+
             $profile->update([
                 'title' => $data['title']
             ]);
@@ -86,7 +97,7 @@ class UserProfileController extends Controller
                 $profile->skills()->sync($data['skills']);
             }
 
-            
+
             if ($request->filled('exp_position')) {
                 $profile->experiences()->create([
                     'position'   => $data['exp_position'],
@@ -96,7 +107,7 @@ class UserProfileController extends Controller
                 ]);
             }
 
-            
+
             if ($request->filled('edu_degree')) {
                 $profile->educations()->create([
                     'degree'     => $data['edu_degree'],
@@ -107,7 +118,7 @@ class UserProfileController extends Controller
             }
         }
 
-   
+
         if ($user->hasRole('recruteur')) {
             $company = $user->company()->firstOrCreate(['user_id' => $user->id]);
             $company->update([
