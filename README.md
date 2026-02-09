@@ -1,4 +1,4 @@
-# Talentia — Plateforme de Recrutement Laravel
+ # Talentia — Plateforme de Recrutement Laravel
 
 Talentia est une plateforme web développée avec Laravel permettant de connecter des recruteurs et des chercheurs d’emploi.
 
