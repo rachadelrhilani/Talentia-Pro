@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'type',
         'photo',
+        'is_premium',
         'bio'
     ];
 
