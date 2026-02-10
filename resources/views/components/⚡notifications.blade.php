@@ -44,6 +44,6 @@ new class extends Component
 </div>
 <script>
     document.addEventListener('user-click-notify', ()=>{
-        Livewire->
+        Livewire.dispatch('notifications','markAsRead')
     })
 </script>
