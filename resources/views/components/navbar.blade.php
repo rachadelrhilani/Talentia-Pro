@@ -47,6 +47,27 @@
                 <span class="text-[11px] hidden md:block">Accueil</span>
             </a>
 
+            {{-- Notifications --}}
+            <div class="relative">
+                <button type="button" id="notifications-button"
+                    class="flex flex-col items-center text-gray-600 hover:text-black transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.91V4a1 1 0 1 0-2 0v1.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z" />
+                    </svg>
+                    <span class="text-[11px] hidden md:block">Notification</span>
+                </button>
+                <div id="notifications-panel"
+                    class="absolute right-0 top-10 w-64 bg-white shadow-lg rounded border hidden">
+                    @forelse(auth()->user()->notifications()->get() as $notification)
+                        <div>{{$notification->data['message'] }}</div>
+
+                    @empty
+                    <div class="px-4 py-3 text-sm text-gray-600">Aucune notification.</div>
+                    @endforelse
+                </div>
+            </div>
+
             {{-- OFFRES --}}
             @role('candidat')
             <a href="{{ route('candidat.jobs.index') }}"
@@ -88,7 +109,7 @@
             </a>
             @endrole
 
-            
+
             <div class="flex flex-col items-center group relative cursor-pointer">
                 <div class="h-6 w-6 rounded-full bg-gray-300 overflow-hidden">
                     <img src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=0a66c2&color=fff' }}"  alt="Avatar">
@@ -133,3 +154,27 @@
         </div>
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const button = document.getElementById('notifications-button');
+        const panel = document.getElementById('notifications-panel');
+        if (!button || !panel) return;
+
+        const closePanel = () => panel.classList.add('hidden');
+
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            panel.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (panel.classList.contains('hidden')) return;
+            if (!panel.contains(event.target)) closePanel();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') closePanel();
+        });
+    });
+</script>

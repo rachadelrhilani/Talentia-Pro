@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 class Profile extends Model
 {
     protected $fillable = ['user_id','title'];
@@ -25,6 +24,6 @@ class Profile extends Model
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class)->withTimestamps();
+        return $this->belongsToMany(skill::class)->withTimestamps();
     }
 }
