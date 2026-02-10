@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Models\skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -9,75 +10,62 @@ use Illuminate\Support\Facades\Storage;
 class UserProfileController extends Controller
 {
     public function show()
-{
-    $user = auth()->user();
-
-    if ($user->hasRole('candidat')) {
-        $profile = $user->profile()->with(['educations', 'experiences', 'skills'])
-            ->firstOrCreate(
-                ['user_id' => $user->id], 
-                ['title' => 'Candidat']   
-            );
-
-        $skills = skill::all();
-        return view('profile.show', compact('user', 'profile', 'skills'));
-    }
-
-    if ($user->hasRole('recruteur')) {
-        $company = $user->company()->firstOrCreate(
-            ['user_id' => $user->id],
-            ['name' => 'Nom de l\'entreprise'] 
-        );
-        return view('profile.show', compact('user', 'company'));
-    }
-}
-
-    public function update(Request $request)
     {
         $user = auth()->user();
 
-        
-        $data = $request->validate([
-            'name'  => 'required|string|max:255',
-            'bio'   => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
+        // users who registered when roles were missing
+        if ($user->roles->isEmpty() && $user->type) {
+            $user->assignRole($user->type);
+            $user->refresh();
+        }
 
-            // Candidat Profile & Skills
-            'title'  => 'nullable|string|max:255',
-            'skills' => 'nullable|array',
+        if ($user->hasRole('candidat')) {
+            $profile = $user->profile()->with(['educations', 'experiences', 'skills'])
+                ->firstOrCreate(
+                    ['user_id' => $user->id],
+                    ['title' => 'Candidat']
+                );
 
-            // Experience
-            'exp_position'   => 'nullable|string|max:255',
-            'exp_company'    => 'nullable|string|max:255',
-            'exp_start_date' => 'nullable|date',
-            'exp_end_date'   => 'nullable|date|after_or_equal:exp_start_date',
+            $skills = skill::all();
+            return view('profile.show', compact('user', 'profile', 'skills'));
+        }
 
-            // Education
-            'edu_degree'     => 'nullable|string|max:255',
-            'edu_school'     => 'nullable|string|max:255',
-            'edu_year_start' => 'nullable|integer|min:1900|max:'.date('Y'),
-            'edu_year_end'   => 'nullable|integer|min:1900|max:2099',
+        if ($user->hasRole('recruteur')) {
+            $company = $user->company()->firstOrCreate(
+                ['user_id' => $user->id],
+                ['name' => 'Nom de l\'entreprise']
+            );
+            return view('profile.show', compact('user', 'company'));
+        }
 
-            // Recruteur
-            'company_name'        => 'nullable|string|max:255',
-            'company_description' => 'nullable|string',
-        ]);
+        // Fallback if no role is assigned
+        abort(403, "You Don't have any Roles. Please Contact Your Admin. (-");
+    }
 
-        
+    public function update(UpdateProfileRequest $request)
+    {
+        $user = auth()->user();
+
+
+        $data = $request->validated();
+
+
         if ($request->hasFile('photo')) {
-            if ($user->photo) { Storage::disk('public')->delete($user->photo); }
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
+            }
             $photoPath = $request->file('photo')->store('profiles', 'public');
             $user->photo = $photoPath;
         }
 
-        
+
         $user->name = $data['name'];
         $user->bio = $data['bio'];
         $user->save();
 
         if ($user->hasRole('candidat')) {
             $profile = $user->profile()->firstOrCreate(['user_id' => $user->id]);
-            
+
             $profile->update([
                 'title' => $data['title']
             ]);
@@ -86,7 +74,7 @@ class UserProfileController extends Controller
                 $profile->skills()->sync($data['skills']);
             }
 
-            
+
             if ($request->filled('exp_position')) {
                 $profile->experiences()->create([
                     'position'   => $data['exp_position'],
@@ -96,7 +84,7 @@ class UserProfileController extends Controller
                 ]);
             }
 
-            
+
             if ($request->filled('edu_degree')) {
                 $profile->educations()->create([
                     'degree'     => $data['edu_degree'],
@@ -107,7 +95,7 @@ class UserProfileController extends Controller
             }
         }
 
-   
+
         if ($user->hasRole('recruteur')) {
             $company = $user->company()->firstOrCreate(['user_id' => $user->id]);
             $company->update([

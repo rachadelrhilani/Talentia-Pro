@@ -14,6 +14,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Joboffer;
+
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('loginForm');
@@ -74,8 +76,8 @@ Route::middleware(['auth', 'role:recruteur'])
     ->name('recruteur.')
     ->group(function () {
 
-    Route::get('/jobs/{job}/edit', [JobController::class,'edit'])->name('jobs.edit');
-        Route::patch('/jobs/{job}', [JobController::class,'update'])->name('jobs.update');
+        Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->name('jobs.edit');
+        Route::patch('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
 
         // offres
         Route::resource('/jobs', JobOfferController::class);
@@ -96,3 +98,11 @@ Route::middleware(['auth', 'role:recruteur'])
             [ApplicationController::class, 'updateStatus']
         )->name('applications.update');
     });
+
+Route::get('/sitemap.xml', function () {
+    $jobs = Joboffer::where('is_closed', false)->get();
+
+    $content = view('sitemap', compact('jobs'))->render();
+
+    return response($content)->header('Content-Type', 'text/xml');
+});
