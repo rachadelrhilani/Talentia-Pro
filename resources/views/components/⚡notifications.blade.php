@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Component;
-
+use \Illuminate\Support\Facades\Auth
 new class extends Component
 {
     public $notifications = [];
@@ -15,7 +15,8 @@ new class extends Component
     }
 
     public function markAsRead(){
-       \Illuminate\Support\Facades\Auth::user()->unreadNotifications->mark
+      auth()::user()->unreadNotifications->markAsRead();
+       $this->mount();
     }
 };
 ?>
@@ -41,3 +42,8 @@ new class extends Component
         </div>
     @endforelse
 </div>
+<script>
+    document.addEventListener('user-click-notify', ()=>{
+        Livewire->
+    })
+</script>
