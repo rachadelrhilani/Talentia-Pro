@@ -9,7 +9,6 @@ use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\PasswordController;
-use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -26,15 +25,13 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/premium/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
-    Route::get('/premium/success', [StripeController::class, 'success'])->name('stripe.success');
-    Route::get('/premium/cancel',[StripeController::class, 'cancel'])->name('stripe.cancel');
-    
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->name('dashboard');
+
+
     // profil personnel
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
@@ -76,6 +73,9 @@ Route::middleware(['auth', 'role:recruteur'])
 
     Route::get('/jobs/{job}/edit', [JobController::class,'edit'])->name('jobs.edit');
         Route::patch('/jobs/{job}', [JobController::class,'update'])->name('jobs.update');
+
+        // entreprise
+        Route::get('/company/edit', [CompanyController::class, 'edit'])->name('company.edit');
 
         // offres
         Route::resource('/jobs', JobOfferController::class);
