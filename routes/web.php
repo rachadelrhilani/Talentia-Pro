@@ -11,6 +11,7 @@ use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Auth;
 
 Route::middleware('guest')->group(function () {
@@ -96,3 +97,7 @@ Route::middleware(['auth', 'role:recruteur'])
             [ApplicationController::class, 'updateStatus']
         )->name('applications.update');
     });
+
+
+Route::get('/auth/github', [SocialiteController::class, 'redirectToGithub'])->name('auth.github');
+Route::get('/auth/github/callback', [SocialiteController::class, 'handleGithubCallback'])->name('auth.github.callback');
