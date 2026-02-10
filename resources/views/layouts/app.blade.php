@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    @livewireStyles
     <meta charset="UTF-8">
     <title>@yield('title', 'Job Platform')</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css','resources/js/app.js'])
     @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
@@ -37,5 +38,6 @@
     <main class="max-w-7xl mx-auto p-6">
         @yield('content')
     </main>
+    @livewireScripts
 </body>
 </html>
