@@ -53,12 +53,7 @@ class FriendRequestSentNotification extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
-    }
+
 
     public function toDatabase($notifiable): array
     {
@@ -74,6 +69,7 @@ class FriendRequestSentNotification extends Notification
         return new BroadcastMessage([
             'message'=>"{$this->sender->name} sent you a friend request",
             'sender_id' => $this->sender->id,
+            'time'=> now()->diffForHumans()
         ]);
     }
 }
