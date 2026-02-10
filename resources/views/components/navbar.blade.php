@@ -49,7 +49,7 @@
 
             {{-- Notifications --}}
             <div class="relative">
-                <button type="button" id="notifications-button"
+                <button onclick="document.dispatchEvent(new Event('user-click-notify'))" type="button" id="notifications-button"
                     class="flex flex-col items-center text-gray-600 hover:text-black transition relative">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor"
                         viewBox="0 0 24 24">
@@ -67,8 +67,8 @@
                         Notifications
                     </div>
                     <div id="Ncontainer" class="max-h-80 overflow-y-auto">
-                        <livewire:notifications />
-                    </div></div></div>
+                        <livewire:notifications /></div></div></div>
+
 
             {{-- OFFRES --}}
             @role('candidat')

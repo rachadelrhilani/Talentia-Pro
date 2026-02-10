@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Component;
-use \Illuminate\Support\Facades\Auth
+use \Illuminate\Support\Facades\Auth;
 new class extends Component
 {
     public $notifications = [];
@@ -44,6 +44,6 @@ new class extends Component
 </div>
 <script>
     document.addEventListener('user-click-notify', ()=>{
-        Livewire.dispatch('notifications','markAsRead')
+        Livewire.dispatchTo('notifications','markAsRead')
     })
 </script>
