@@ -1,6 +1,5 @@
 <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
-
         {{-- LOGO --}}
         <div class="flex items-center flex-1">
             <a href="{{ route('dashboard') }}" class="text-[#0a66c2] mr-2">
@@ -11,7 +10,7 @@
         </div>
 
         {{-- MENU --}}
-        <div class="flex items-center space-x-1 md:space-x-6">
+        <div id="menu" class="flex items-center space-x-1 md:space-x-6" data-user-id="{{auth()->id()}}" >
             @auth
 
             {{-- SEARCH --}}
@@ -47,26 +46,29 @@
                 <span class="text-[11px] hidden md:block">Accueil</span>
             </a>
 
+
             {{-- Notifications --}}
             <div class="relative">
                 <button type="button" id="notifications-button"
-                    class="flex flex-col items-center text-gray-600 hover:text-black transition">
+                    class="flex flex-col items-center text-gray-600 hover:text-black transition relative">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor"
                         viewBox="0 0 24 24">
                         <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.91V4a1 1 0 1 0-2 0v1.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z" />
                     </svg>
+                    <span id="notifications-badge"
+                        class="absolute -top-1 -right-1 min-w-5 h-5 px-1.5 rounded-full bg-red-500 text-white text-[10px] leading-5 text-center font-semibold ">
+                        {{ auth()->user()->unreadNotifications()->count() }}
+                    </span>
                     <span class="text-[11px] hidden md:block">Notification</span>
                 </button>
                 <div id="notifications-panel"
-                    class="absolute right-0 top-10 w-64 bg-white shadow-lg rounded border hidden">
-                    @forelse(auth()->user()->notifications()->get() as $notification)
-                        <div>{{$notification->data['message'] }}</div>
-
-                    @empty
-                    <div class="px-4 py-3 text-sm text-gray-600">Aucune notification.</div>
-                    @endforelse
-                </div>
-            </div>
+                    class="absolute right-0 top-10 w-80 bg-white shadow-lg rounded-lg border border-gray-100 hidden">
+                    <div class="px-4 py-3 border-b border-gray-100 text-sm font-semibold text-gray-700">
+                        Notifications
+                    </div>
+                    <div id="Ncontainer" class="max-h-80 overflow-y-auto">
+                        <livewire:notifications />
+                    </div></div></div>
 
             {{-- OFFRES --}}
             @role('candidat')
@@ -154,8 +156,8 @@
         </div>
     </div>
 </nav>
-
 <script>
+
     document.addEventListener('DOMContentLoaded', () => {
         const button = document.getElementById('notifications-button');
         const panel = document.getElementById('notifications-panel');
@@ -177,4 +179,6 @@
             if (event.key === 'Escape') closePanel();
         });
     });
+
+
 </script>
