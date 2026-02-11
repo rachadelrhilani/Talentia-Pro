@@ -1,5 +1,6 @@
 <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+
         {{-- LOGO --}}
         <div class="flex items-center flex-1">
             <a href="{{ route('dashboard') }}" class="text-[#0a66c2] mr-2">

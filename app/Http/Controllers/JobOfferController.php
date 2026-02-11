@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Job\StoreJobOfferRequest;
+use App\Http\Requests\Job\UpdateJobOfferRequest;
 use App\Models\Application;
 use App\Models\Joboffer;
 use Illuminate\Container\Attributes\Storage;
@@ -21,16 +23,9 @@ class JobOfferController extends Controller
         return view('recruteur.jobs.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreJobOfferRequest $request)
     {
-        $data = $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'location'      => 'required|string|max:255',
-            'contract_type' => 'required|in:CDI,CDD,Stage,Freelance,Full-time',
-            'salary'        => 'nullable|string|max:255',
-            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation dial l-image
-        ]);
+        $data = $request->validated();
 
         if (!auth()->user()->company) {
             return back()->with('error', "Vous devez d'abord configurer les informations de votre entreprise.");
@@ -63,16 +58,9 @@ class JobOfferController extends Controller
         return view('recruteur.jobs.edit', compact('job'));
     }
 
-    public function update(Request $request, Joboffer $job)
+    public function update(UpdateJobOfferRequest $request, Joboffer $job)
     {
-        $data = $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'location'      => 'required|string|max:255',
-            'contract_type' => 'required|in:CDI,CDD,Stage,Freelance,Full-time',
-            'salary'        => 'nullable|string|max:255',
-            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $data = $request->validated();
 
         if ($request->hasFile('image')) {
             if ($job->image) {
