@@ -18,6 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+        
+        // Track user online status
+        $middleware->web(append: [
+            \App\Http\Middleware\UpdateUserLastSeen::class,
+        ]);
 
         // Security Headers Middleware
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
