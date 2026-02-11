@@ -25,10 +25,12 @@ class User extends Authenticatable
         'password',
         'type',
         'photo',
-        'last_seen_at'
+        'last_seen_at',
         'is_premium',
         'bio',
         'slug',
+        'title',
+        'description',
     ];
 
     protected static function boot()
@@ -108,7 +110,7 @@ class User extends Authenticatable
     /**
      * Check if user is currently online
      * User is considered online if last seen within 5 minutes
-     * 
+     *
      * @return bool
      */
     public function isOnline(): bool
@@ -116,13 +118,13 @@ class User extends Authenticatable
         if (!$this->last_seen_at) {
             return false;
         }
-        
+
         return $this->last_seen_at->gt(now()->subMinutes(5));
     }
 
     /**
      * Update the user's last seen timestamp
-     * 
+     *
      * @return void
      */
     public function updateLastSeen(): void

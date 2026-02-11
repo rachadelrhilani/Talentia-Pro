@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Application\UpdateApplicationStatusRequest;
 use App\Models\Application;
 use App\Models\Joboffer;
+use App\Notifications\OfferNotification;
 use Illuminate\Http\Request;
 
 class ApplicationController extends Controller
@@ -26,15 +27,6 @@ class ApplicationController extends Controller
 
         $profile = $user->profile;
 
-        if (
-            !$profile ||
-            $profile->educations()->count() === 0 ||
-            $profile->experiences()->count() === 0 ||
-            $profile->skills()->count() === 0
-        ) {
-
-            return back()->with('error', 'Votre profil est incomplet. Veuillez remplir vos formations, expériences et compétences.');
-        }
         $alreadyApplied = Application::where('job_offer_id', $job->id)
             ->where('user_id', $user->id)
             ->exists();
@@ -69,6 +61,8 @@ class ApplicationController extends Controller
         $application->update([
             'status' => $request->status
         ]);
+
+        $application->candidate->notify(new OfferNotification($application));
 
         return back()->with('success', 'Statut mis à jour');
     }

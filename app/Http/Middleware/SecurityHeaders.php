@@ -21,7 +21,13 @@ class SecurityHeaders
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-XSS-Protection', '1; mode=block');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-        $response->headers->set('Content-Security-Policy', "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; font-src 'self' https: data:;");
+        $response->headers->set(
+            'Content-Security-Policy',
+            "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; " .
+            "img-src 'self' data: https:; " .
+            "font-src 'self' https: data:; " .
+            "connect-src 'self' https: wss: ws: http:;"
+        );
 
         return $response;
     }

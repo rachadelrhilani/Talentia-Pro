@@ -6,7 +6,7 @@ use App\Http\Requests\Job\StoreJobOfferRequest;
 use App\Http\Requests\Job\UpdateJobOfferRequest;
 use App\Models\Application;
 use App\Models\Joboffer;
-use Illuminate\Container\Attributes\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage as FacadesStorage;
 
@@ -25,6 +25,7 @@ class JobOfferController extends Controller
 
     public function store(StoreJobOfferRequest $request)
     {
+
         $data = $request->validated();
 
         if (!auth()->user()->company) {
@@ -37,6 +38,7 @@ class JobOfferController extends Controller
             $imagePath = $request->file('image')->store('job_offers', 'public');
         }
 
+
         auth()->user()->jobOffers()->create([
             'title'         => $data['title'],
             'description'   => $data['description'],
@@ -46,7 +48,9 @@ class JobOfferController extends Controller
             'image'         => $imagePath,
             'company_id'    => auth()->user()->company->id,
             'is_closed'     => false,
+
         ]);
+
 
         return redirect()
             ->route('recruteur.jobs.index')

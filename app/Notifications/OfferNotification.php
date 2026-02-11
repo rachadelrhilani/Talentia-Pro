@@ -2,8 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Models\Application;
+use App\Models\Joboffer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -14,9 +17,10 @@ class OfferNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    private $application;
+    public function __construct( Application $application)
     {
-        //
+        $this->application = $application->load('jobOffer');
     }
 
     /**
@@ -26,7 +30,7 @@ class OfferNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['broadcast','database'];
     }
 
     /**
@@ -43,12 +47,32 @@ class OfferNotification extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @return array<string, mixed>
+     * @return BroadcastMessage
      */
-    public function toArray(object $notifiable): array
+    public function toBroadcast(object $notifiable): BroadcastMessage
     {
-        return [
-            //
-        ];
+        if ($this->application->status == 'accepted'){
+            return new BroadcastMessage([
+                'message'=> $this->application->jobOffer->title.' has accepted your application',
+                'time'=>now()->diffForHumans()
+            ]);
+        }  return new BroadcastMessage([
+        'message'=> $this->application->jobOffer->title.' has declined your application',
+        'time'=>now()->diffForHumans()
+    ]);
+
+
+    }
+
+    public function toDatabase(Object $notifiable): array
+    {
+       if($this->application->status == 'declined'){ return [
+                   'message'=> $this->application->jobOffer->title.' has declined your application'
+        ];}
+       else {
+           return [
+               'message'=> $this->application->jobOffer->title.' has accepted your application'
+           ];
+       }
     }
 }
