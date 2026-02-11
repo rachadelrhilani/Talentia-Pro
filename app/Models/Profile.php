@@ -25,6 +25,6 @@ class Profile extends Model
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class)->withTimestamps();
+        return $this->belongsToMany(skill::class)->withTimestamps();
     }
 }

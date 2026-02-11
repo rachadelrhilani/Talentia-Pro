@@ -42,6 +42,12 @@ return [
         'scope' => ['read:user', 'user:email'], // important pour récupérer l'email
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
 
 
 ];

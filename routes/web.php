@@ -98,6 +98,10 @@ Route::middleware(['auth', 'role:recruteur'])
         )->name('applications.update');
     });
 
+//Github
 Route::get('/auth/github', [SocialAuthController::class, 'redirectToGithub'])->name('auth.github');
 Route::get('/auth/github/callback', [SocialAuthController::class, 'handleGithubCallback'])->name('auth.github.callback');
 
+// Google
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [SocialAuthController::class,'handleGoogleCallback'])->name('auth.google.callback');
