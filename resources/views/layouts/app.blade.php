@@ -2,6 +2,7 @@
 <html lang="fr">
 
 <head>
+    @livewireStyles
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -61,6 +62,7 @@
     <main class="max-w-7xl mx-auto p-6">
         @yield('content')
     </main>
+    @livewireScripts
     @stack('scripts')
 </body>
 

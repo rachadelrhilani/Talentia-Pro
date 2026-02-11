@@ -11,7 +11,7 @@
         </div>
 
         {{-- MENU --}}
-        <div class="flex items-center space-x-1 md:space-x-6">
+        <div id="menu" class="flex items-center space-x-1 md:space-x-6" data-user-id="{{auth()->id()}}" >
             @auth
 
             {{-- SEARCH --}}
@@ -46,6 +46,11 @@
                 </svg>
                 <span class="text-[11px] hidden md:block">Accueil</span>
             </a>
+
+
+            {{-- Notifications --}}
+            <livewire:notifications />
+
 
             {{-- OFFRES --}}
             @role('candidat')
@@ -88,7 +93,7 @@
             </a>
             @endrole
 
-            
+
             <div class="flex flex-col items-center group relative cursor-pointer">
                 <div class="h-6 w-6 rounded-full bg-gray-300 overflow-hidden">
                     <img src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=0a66c2&color=fff' }}"  alt="Avatar">

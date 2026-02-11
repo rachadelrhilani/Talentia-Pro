@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Friendship;
 use App\Models\User;
+use App\Notifications\FriendRequestSentNotification;
 use Illuminate\Http\Request;
 
 class FriendshipController extends Controller
@@ -57,11 +58,15 @@ if (auth()->id() === $user->id) {
                         ->exists();
 
     if (!$exists) {
-        Friendship::create([
+       $friendRequest =  Friendship::create([
             'sender_id' => auth()->id(),
             'receiver_id' => $user->id,
             'status' => 'pending'
         ]);
+        $user->notify(new FriendRequestSentNotification($friendRequest,auth()->user()));
+
+
+
     }
 
     return back()->with('success', 'Invitation envoyée !');
@@ -69,7 +74,7 @@ if (auth()->id() === $user->id) {
 
 public function accept(Friendship $friendship)
 {
-  
+
     if ($friendship->receiver_id !== auth()->id()) {
         abort(403);
     }
