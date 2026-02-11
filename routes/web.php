@@ -14,6 +14,8 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\SocialAuthController;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Joboffer;
+
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('loginForm');
@@ -72,8 +74,8 @@ Route::middleware(['auth', 'role:recruteur'])
     ->name('recruteur.')
     ->group(function () {
 
-    Route::get('/jobs/{job}/edit', [JobController::class,'edit'])->name('jobs.edit');
-        Route::patch('/jobs/{job}', [JobController::class,'update'])->name('jobs.update');
+        Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->name('jobs.edit');
+        Route::patch('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
 
         // entreprise
         Route::get('/company/edit', [CompanyController::class, 'edit'])->name('company.edit');
@@ -105,3 +107,10 @@ Route::get('/auth/github/callback', [SocialAuthController::class, 'handleGithubC
 // Google
 Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [SocialAuthController::class,'handleGoogleCallback'])->name('auth.google.callback');
+Route::get('/sitemap.xml', function () {
+    $jobs = Joboffer::where('is_closed', false)->get();
+
+    $content = view('sitemap', compact('jobs'))->render();
+
+    return response($content)->header('Content-Type', 'text/xml');
+});

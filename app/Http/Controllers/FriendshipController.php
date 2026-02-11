@@ -47,7 +47,7 @@ class FriendshipController extends Controller
 
    public function send(User $user)
 {
-    if (auth()->id() === $user->id) {
+if (auth()->id() === $user->id) {
         return back()->with('error', 'Vous ne pouvez pas vous ajouter vous-même.');
     }
 

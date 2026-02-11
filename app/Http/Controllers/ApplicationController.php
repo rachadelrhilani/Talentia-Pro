@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Application\UpdateApplicationStatusRequest;
 use App\Models\Application;
 use App\Models\Joboffer;
 use Illuminate\Http\Request;
@@ -61,11 +62,9 @@ class ApplicationController extends Controller
         $applications = auth()->user()->applications;
         return view('candidat.applications.index', compact('applications'));
     }
-    public function updateStatus(Request $request, Application $application)
+    public function updateStatus(UpdateApplicationStatusRequest $request, Application $application)
     {
-        $request->validate([
-            'status' => 'required|in:accepted,rejected'
-        ]);
+        $request->validated();
 
         $application->update([
             'status' => $request->status

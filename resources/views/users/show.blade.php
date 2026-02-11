@@ -28,6 +28,13 @@
                             {{ $user->hasRole('recruteur') ? 'Recruteur' : 'Candidat' }}
                         </span>
                     </div>
+                    {{-- Online/Offline Status --}}
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="w-3 h-3 rounded-full {{ $user->isOnline() ? 'bg-green-500 animate-pulse' : 'bg-gray-400' }}"></span>
+                        <span class="text-sm {{ $user->isOnline() ? 'text-green-600 font-medium' : 'text-gray-500' }}">
+                            {{ $user->isOnline() ? 'Online now' : 'Last seen ' . ($user->last_seen_at ? $user->last_seen_at->diffForHumans() : 'never') }}
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -145,7 +152,7 @@
 
     </div>
     @if(auth()->id() !== $user->id && $user->hasRole('candidat') && auth()->user()->hasRole('candidat'))
-    <form action="{{ route('candidat.send', $user->id) }}" method="POST">
+    <form action="{{ route('candidat.send', $user) }}" method="POST">
         @csrf
         <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-sm flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
