@@ -4,6 +4,7 @@ const userId = menu.dataset.userId;
 if (userId) {
     window.Echo.private(`App.Models.User.${userId}`)
         .notification((notification) => {
+            console.log(notification);
             const div = document.createElement('div');
             div.classList = "px-4 py-3 flex gap-3 hover:bg-gray-50 transition"
             div.innerHTML = `
