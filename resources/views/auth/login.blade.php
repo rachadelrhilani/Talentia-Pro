@@ -30,6 +30,13 @@
                 <a href="#" class="text-[#0a66c2] hover:underline font-semibold text-sm">Mot de passe oublié ?</a>
             </div>
 
+            <div class="mb-6">
+                <a href="{{ route('auth.github') }}" class="text-[#0a66c2] hover:underline font-semibold text-sm">GitHub</a>
+            </div>
+            <div class="mb-6">
+                <a href="{{ route('auth.google') }}" class="text-[#0a66c2] hover:underline font-semibold text-sm">GOOGLE</a>
+            </div>
+
             <button class="w-full bg-[#0a66c2] hover:bg-[#004182] text-white font-semibold py-3 rounded-full transition duration-200 text-lg">
                 S'identifier
             </button>

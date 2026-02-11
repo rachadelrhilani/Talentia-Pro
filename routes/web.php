@@ -11,6 +11,7 @@ use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\SocialAuthController;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Joboffer;
@@ -99,6 +100,13 @@ Route::middleware(['auth', 'role:recruteur'])
         )->name('applications.update');
     });
 
+//Github
+Route::get('/auth/github', [SocialAuthController::class, 'redirectToGithub'])->name('auth.github');
+Route::get('/auth/github/callback', [SocialAuthController::class, 'handleGithubCallback'])->name('auth.github.callback');
+
+// Google
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [SocialAuthController::class,'handleGoogleCallback'])->name('auth.google.callback');
 Route::get('/sitemap.xml', function () {
     $jobs = Joboffer::where('is_closed', false)->get();
 
