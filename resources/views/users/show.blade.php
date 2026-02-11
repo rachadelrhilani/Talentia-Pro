@@ -28,6 +28,13 @@
                             {{ $user->hasRole('recruteur') ? 'Recruteur' : 'Candidat' }}
                         </span>
                     </div>
+                    {{-- Online/Offline Status --}}
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="w-3 h-3 rounded-full {{ $user->isOnline() ? 'bg-green-500 animate-pulse' : 'bg-gray-400' }}"></span>
+                        <span class="text-sm {{ $user->isOnline() ? 'text-green-600 font-medium' : 'text-gray-500' }}">
+                            {{ $user->isOnline() ? 'Online now' : 'Last seen ' . ($user->last_seen_at ? $user->last_seen_at->diffForHumans() : 'never') }}
+                        </span>
+                    </div>
                 </div>
             </div>
 
