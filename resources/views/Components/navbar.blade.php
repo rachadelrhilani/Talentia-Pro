@@ -47,6 +47,16 @@
                 <span class="text-[11px] hidden md:block">Accueil</span>
             </a>
 
+            <!-- Nouveau bouton Conversation dans le menu -->
+<a href="{{ route('conversation.index') }}"
+    class="flex flex-col items-center text-gray-600 hover:text-black transition">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M23 9v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9l10-7z" />
+    </svg>
+    <span class="text-[11px] hidden md:block">Conversations</span>
+</a>
+
+
             {{-- OFFRES --}}
             @role('candidat')
             <a href="{{ route('candidat.jobs.index') }}"

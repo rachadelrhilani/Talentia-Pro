@@ -4,6 +4,7 @@ use App\Http\Controllers\ApplicationController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\JobController;
@@ -45,6 +46,21 @@ Route::middleware('auth')->group(function () {
     // recherche utilisateurs
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+
+
+    //conversation
+    // Afficher toutes les conversations
+    Route::get('/conversations',[ConversationController::class,'index'])->name('conversation.index');
+
+    // Démarrer une nouvelle conversation
+    Route::post('/conversations/start', [ConversationController::class, 'start'])->name('conversations.start');
+
+    // Afficher une conversation spécifique
+    Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
+    
+    // Enregistrer un message dans la conversation()
+    Route::post('/conversations/{conversation}/messages', [ConversationController::class, 'store'])->name('conversations.store');
+
 });
 Route::middleware(['auth', 'role:candidat'])
     ->prefix('candidat')
@@ -97,6 +113,8 @@ Route::middleware(['auth', 'role:recruteur'])
             [ApplicationController::class, 'updateStatus']
         )->name('applications.update');
     });
+
+
 
 
 Route::get('/auth/github', [SocialiteController::class, 'redirectToGithub'])->name('auth.github');
