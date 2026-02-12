@@ -35,12 +35,13 @@ class StripeController extends Controller
     public function success()
     {
         $user = auth()->user();
+
         $user->update([
             'is_premium' => true,
-            'premium_expires_at' => now()->addDays(30), // Zid 30 jours
+            'premium_expires_at' => now()->addDays(30),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Félicitations ! Votre compte est maintenant Premium.');
+        return redirect()->route('dashboard')->with('success', 'Paiement réussi ! Vous êtes Premium pour 30 jours.');
     }
     public function cancel()
     {
