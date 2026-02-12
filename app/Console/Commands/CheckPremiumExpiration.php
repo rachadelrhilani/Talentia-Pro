@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\PremiumExpiringSoon;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -13,7 +14,7 @@ class CheckPremiumExpiration extends Command
      *
      * @var string
      */
-    protected $signature = 'app:check-premium-expiration';
+    protected $signature = 'premium:check-expiration';
 
     /**
      * The console command description.
