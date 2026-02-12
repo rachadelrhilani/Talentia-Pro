@@ -6,3 +6,5 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 import './echo';
 import './notifications';
+import './conversation.js';
+
