@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Disallow: /nova/
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /candidat/applications
+Disallow: /recruteur/applications
+
+Sitemap: /sitemap.xml

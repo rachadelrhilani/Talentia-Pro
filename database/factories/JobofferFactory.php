@@ -18,34 +18,33 @@ class JobofferFactory extends Factory
      */
     public function definition(): array
     {
-       // On récupère spécifiquement le recruteur 5
-$recruiter = User::role('recruteur')->find(2);
+        $recruiter = User::role('recruteur')->find(2);
 
-// On récupère l'entreprise qui appartient à ce recruteur spécifique
-$company = Companie::where('user_id', 2)->first();
 
-return [
-    'company_id' => $company->id ?? Companie::inRandomOrder()->value('id'),
-    
-    // On force l'ID du recruteur à 5
-    'user_id' => 2,
+        $company = Companie::where('user_id', 2)->first();
 
-    'title' => fake()->randomElement([
-        'Développeur Fullstack Laravel React',
-        'UI/UX Designer',
-        'Développeur Frontend React',
-        'Backend Laravel Engineer',
-        'DevOps Junior'
-    ]),
+        return [
+            'company_id' => $company->id ?? Companie::inRandomOrder()->value('id'),
+            
+            // On force l'ID du recruteur à 5
+            'user_id' => 2,
 
-    'description' => fake()->paragraphs(4, true),
+            'title' => fake()->randomElement([
+                'Développeur Fullstack Laravel React',
+                'UI/UX Designer',
+                'Développeur Frontend React',
+                'Backend Laravel Engineer',
+                'DevOps Junior'
+            ]),
 
-    'contract_type' => fake()->randomElement([
-        'CDI', 'CDD', 'Stage', 'Freelance'
-    ]),
+            'description' => fake()->paragraphs(4, true),
 
-    'image' => 'jobs/default.png',
-    'is_closed' => fake()->boolean(20),
-];
+            'contract_type' => fake()->randomElement([
+                'CDI', 'CDD', 'Stage', 'Freelance'
+            ]),
+
+            'image' => 'jobs/default.png',
+            'is_closed' => fake()->boolean(20),
+        ];
     }
 }

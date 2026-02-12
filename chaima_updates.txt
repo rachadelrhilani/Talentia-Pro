@@ -1,0 +1,103 @@
+UPDATES – Online / Offline Status Feature
+What this does
+
+Users can now see who’s online and who’s offline.
+
+ Green pulsing dot → user is online (active in the last 5 minutes)
+
+Gray dot → user is offline
+
+When you hover on it or open the profile, you can see when they were last active
+
+Files I added
+
+1. Migration
+database/migrations/2026_02_11_004538_add_last_seen_at_to_users_table.php
+
+Adds a last_seen_at column to the users table
+
+This is what we use to know the last time a user was active
+
+2. Middleware
+app/Http/Middleware/UpdateUserLastSeen.php
+
+Updates the user’s last_seen_at automatically when they make a request
+
+It only updates once per minute so we don’t spam the database
+
+3. Docs
+docs/online-status-feature.md
+
+Full technical explanation if anyone wants more details
+
+Files I changed
+
+1. app/Models/User.php
+
+Added last_seen_at to $fillable
+
+Added isOnline() → checks if the user was active in the last 5 minutes
+
+Added updateLastSeen() → updates the timestamp
+
+2. bootstrap/app.php
+
+Registered the middleware so it runs on every web request
+
+3. resources/views/users/index.blade.php
+
+Replaced the role badge with an online/offline dot
+
+Added a tooltip showing the last seen time
+
+4. resources/views/users/show.blade.php
+
+Shows the online/offline status on the user profile
+
+Displays “Online now” or “Last seen X minutes ago”
+
+5. .gitignore
+
+Added the /docs folder so documentation doesn’t get committed
+
+How it works (simple version)
+
+Every time a logged-in user loads a page, the middleware updates their last_seen_at (only if it hasn’t been updated in the last minute).
+
+When we display users, isOnline() checks:
+
+last seen within 5 minutes → online
+
+more than 5 minutes → offline
+
+That’s it.
+
+What you need to do
+
+Pull the latest changes
+
+Run:
+
+php artisan migrate
+
+
+If something feels weird:
+
+php artisan config:clear
+
+How to test it
+
+Log in with two different users (two browsers or incognito)
+
+Go to the users list or a profile
+
+You should see a green dot for the other user
+
+Log one user out and wait ~6 minutes
+
+Refresh → the dot should turn gray and show “Last seen X minutes ago”
+
+Config
+
+If you want to change when a user is considered offline, update the isOnline() method in User.php.
+Right now it’s 5 minutes.
