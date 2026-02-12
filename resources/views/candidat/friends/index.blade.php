@@ -75,9 +75,13 @@
 
                     </div>
                     @else
-                    <button class="border border-gray-400 text-gray-600 font-bold px-4 py-1.5 rounded-full text-sm hover:bg-gray-100 transition">
-                        Message
-                    </button>
+                        <form action="{{route('conversations.start')}}" method="post">
+                            @csrf
+                            <input type="hidden" name="other_user_id" value="{{ $friend->id }}" >
+                            <button type="submit" class="border border-gray-400 text-gray-600 font-bold px-4 py-1.5 rounded-full text-sm hover:bg-gray-100 transition">
+                                Message
+                            </button>
+                        </form>
                     @endif
                 </div>
 

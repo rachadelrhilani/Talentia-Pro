@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/premium/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
     Route::get('/premium/success', [StripeController::class, 'success'])->name('stripe.success');
     Route::get('/premium/cancel',[StripeController::class, 'cancel'])->name('stripe.cancel');
-    
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
     // profil personnel
@@ -50,6 +50,14 @@ Route::middleware('auth')->group(function () {
     // recherche utilisateurs
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+
+    // chat
+
+    Route::get('/conversations',[\App\Http\Controllers\ChatController::class,'index'])->name('myconv');
+    Route::post('/conversations/start',[\App\Http\Controllers\ChatController::class,'start'])->name('conversations.start');
+    Route::get('/conversations/{conversation}',[\App\Http\Controllers\ChatController::class,'show'])->name('conversations.show');
+    Route::post('/conversations/{conversation}/messages',[\App\Http\Controllers\ChatController::class,'store'])->name('conversations.messages.store');
+
 });
 Route::middleware(['auth', 'role:candidat'])
     ->prefix('candidat')
