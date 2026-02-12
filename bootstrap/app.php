@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+
+        // Update last_seen_at for authenticated users on web requests.
+        $middleware->appendToGroup('web', \App\Http\Middleware\UpdateUserLastSeen::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
