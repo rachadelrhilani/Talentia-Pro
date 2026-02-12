@@ -62,18 +62,18 @@ new class extends Component
         <span class="text-[11px] hidden md:block">Notification</span>
     </button>
     <div id="notifications-panel" wire:click.outside="justCloseIt"
-        class="absolute right-0 top-10 w-80 bg-white shadow-lg rounded-lg border border-gray-100 {{ $open ? '' : 'hidden' }}">
+        class="absolute right-0 top-11 w-80 sm:w-96 max-w-[90vw] bg-white shadow-xl rounded-xl border border-gray-100 z-50 {{ $open ? '' : 'hidden' }}">
         <div class="px-4 py-3 border-b border-gray-100 text-sm font-semibold text-gray-700">
             Notifications
         </div>
-        <div id="Ncontainer" class="max-h-80 overflow-y-auto">
+        <div id="Ncontainer" class="max-h-80 overflow-y-auto divide-y divide-gray-100">
             @forelse($notifications as $notification)
-                <div class="px-4 py-3 flex gap-3 hover:bg-gray-50 transition">
-                    <div class="h-9 w-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold">
+                <div class="px-4 py-3.5 flex gap-3 hover:bg-gray-50 transition">
+                    <div class="h-9 w-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold shrink-0">
                         {{ strtoupper(substr($notification->data['message'] ?? 'N', 0, 1)) }}
                     </div>
-                    <div class="flex-1">
-                        <div class="text-sm text-gray-800">
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm text-gray-800 leading-5">
                             {{ $notification->data['message'] ?? 'Notification' }}
                         </div>
                         <div class="text-xs text-gray-500 mt-1">

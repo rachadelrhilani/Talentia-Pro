@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     @livewireStyles
     <meta charset="UTF-8">
@@ -31,6 +32,7 @@
     </script>
     @endpush
 </head>
+
 <body class="bg-gray-100">
 
     @include('components.navbar')
@@ -41,4 +43,5 @@
     @livewireScripts
     @stack('scripts')
 </body>
+
 </html>

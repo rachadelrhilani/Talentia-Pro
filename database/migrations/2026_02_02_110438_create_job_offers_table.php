@@ -16,8 +16,10 @@ return new class extends Migration
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // recruteur
             $table->string('title');
+            $table->string('location');
             $table->text('description');
             $table->enum('contract_type', ['CDI', 'CDD', 'Stage', 'Freelance', 'Full-time']);
+            $table->string('salary')->nullable();
             $table->string('image')->nullable();
             $table->boolean('is_closed')->default(false);
             $table->timestamps();

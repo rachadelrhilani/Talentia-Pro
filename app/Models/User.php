@@ -29,6 +29,8 @@ class User extends Authenticatable
         'is_premium',
         'bio',
         'slug',
+        'title',
+        'description',
     ];
 
     protected static function boot()
