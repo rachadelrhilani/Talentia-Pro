@@ -39,9 +39,37 @@
 
     <main class="max-w-7xl mx-auto p-6">
         @yield('content')
+        @if (session('status') || session('info'))
+            <div id="flash-message"
+                class="fixed top-5 right-5 z-50 px-4 py-3 rounded-lg shadow-lg
+                        {{ session('status') ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+
+                {{ session('status') ?? session('info') }}
+
+            </div>
+        @endif
+
+
+
     </main>
     @livewireScripts
     @stack('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const flash = document.getElementById('flash-message');
+
+            if (flash) {
+                setTimeout(function () {
+                    flash.remove();
+                }, 1000); 
+            }
+
+        });
+        </script>
+
+
+
 </body>
 
 </html>

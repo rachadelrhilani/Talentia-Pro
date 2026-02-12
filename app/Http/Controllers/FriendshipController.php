@@ -81,7 +81,8 @@ public function accept(Friendship $friendship)
 
     $friendship->update(['status' => 'accepted']);
 
-    return back()->with('success', 'Vous êtes maintenant amis.');
+    
+    return redirect()->back()->with('status', 'La demande a été acceptée avec succès.');
 }
 
 public function reject(Friendship $friendship)
