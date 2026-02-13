@@ -27,6 +27,7 @@ class User extends Authenticatable
         'photo',
         'last_seen_at',
         'is_premium',
+        'premium_expires_at',
         'bio',
         'slug',
         'title',
