@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
+use Illuminate\Container\Attributes\Database;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
@@ -73,6 +75,11 @@ class ChatController extends Controller
             'sender_id' => $authId,
             'text' => $data['text']
         ]);
+
+        if($request->hasFile('attach')){
+            $path = $request->file('attach')->store("conversations/{$conversation->id}/messages/{$message->id}",'private');
+            DB::table('files')->insert('message_id'=>$message->id,);
+        }
 
         event(new MessageSent($message));
 
