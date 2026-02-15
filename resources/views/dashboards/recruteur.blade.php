@@ -5,7 +5,7 @@
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-6">
 
         <div class="md:col-span-3">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-20">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden top-20">
                 <div class="h-16 bg-[#004182]"></div>
                 <div class="px-4 -mt-8 mb-4 flex flex-col items-center border-b border-gray-100 pb-4">
                     <div class="w-16 h-16 bg-white rounded-lg border-2 border-white shadow-md flex items-center justify-center overflow-hidden">
@@ -34,6 +34,52 @@
                     <span class="text-xs font-bold text-[#0a66c2]">Accéder Profile</span>
                 </a>
             </div>
+             {{-- Bloc Premium Stripe --}}
+@if(!auth()->user()->is_premium)
+<div class="relative overflow-hidden bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-6 mt-4 group">
+    <div class="absolute -right-6 -top-6 w-24 h-24 bg-indigo-50 rounded-full transition-transform group-hover:scale-150 duration-700"></div>
+    
+    <div class="relative">
+        <div class="flex items-center space-x-2 mb-4">
+            <span class="flex h-2 w-2 rounded-full bg-indigo-600"></span>
+            <span class="text-[10px] font-black uppercase tracking-widest text-indigo-600">Offre Exclusive</span>
+        </div>
+
+        <h3 class="text-gray-900 font-extrabold text-lg leading-tight mb-2">
+            Passez à la vitesse <span class="text-indigo-600">supérieure</span>
+        </h3>
+        
+        <p class="text-gray-500 text-xs leading-relaxed mb-6">
+            Débloquez des opportunités exclusives et donnez à votre profil la visibilité qu'il mérite.
+        </p>
+
+        <a href="{{ route('stripe.checkout') }}" 
+           class="flex items-center justify-center w-full bg-gray-900 hover:bg-indigo-600 text-white text-xs font-bold py-3 px-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 shadow-md">
+            <span>Activer Premium</span>
+            <span class="mx-2 opacity-20">|</span>
+            <span>500 DH</span>
+        </a>
+    </div>
+</div>
+@else
+<div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-100 p-4 mt-4 relative overflow-hidden">
+    <div class="absolute top-2 right-2 opacity-20 text-amber-600">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6.1 4.5 2.3 7.3-6.2-4.6-6.2 4.6 2.3-7.3-6.1-4.5h7.6z"/></svg>
+    </div>
+    
+    <div class="flex items-center space-x-4">
+        <div class="flex-shrink-0 w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center shadow-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <div>
+            <p class="text-[13px] font-black text-amber-900 leading-none">Membre Premium</p>
+            <p class="text-[10px] text-amber-700 mt-1 font-medium">Accès illimité activé</p>
+        </div>
+    </div>
+</div>
+@endif
         </div>
 
         <div class="md:col-span-6 space-y-4">
