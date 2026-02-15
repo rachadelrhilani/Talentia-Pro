@@ -59,6 +59,26 @@ new class extends Component
         $this->unreadCount = 0;
         $this->notifications = $user->notifications()->latest()->take(10)->get();
     }
+    public function getListeners()
+    {
+        $authId = auth()->id();
+        return [
+            "echo-private:App.Models.User.{$authId},.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated" => 'handleNotification',
+        ];
+    }
+
+    public function handleNotification($payload)
+    {
+        $user = auth()->user();
+        if (!$user) return;
+
+        // Invalidate notification caches
+        cache()->forget("user_notifications_{$user->id}");
+        cache()->forget("user_unread_notifications_count_{$user->id}");
+
+        $this->notifications = $user->notifications()->latest()->take(10)->get();
+        $this->unreadCount = $user->unreadNotifications()->count();
+    }
 };
 ?>
 
