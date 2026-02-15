@@ -1,10 +1,16 @@
 const conv = document.getElementById("messages");
 if (conv) {
     const conversationId = conv.dataset.conversationId;
+    const authId = conv.dataset.authId;
     window.Echo.private(`conversation.${conversationId}`).listen(
         "MessageSent",
         (event) => {
             console.log(event);
+
+            // Skip if the message was sent by the current user (already handled by AJAX)
+            if (parseInt(event.message.sender_id) === parseInt(authId)) {
+                return;
+            }
 
             const div = document.createElement("div");
             div.classList = "justify-start flex ";
