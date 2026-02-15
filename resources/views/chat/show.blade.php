@@ -30,7 +30,7 @@
             </div>
 
             <div class="p-5">
-                <div id="messages" data-conversation-id="{{ $conversation->id }}" class="space-y-3 mb-5 max-h-[60vh] overflow-y-auto pr-1">
+                <div id="messages" data-conversation-id="{{ $conversation->id }}" data-auth-id="{{ $authId }}" class="space-y-3 mb-5 max-h-[60vh] overflow-y-auto pr-1">
                     @forelse ($messages as $message)
                     @php($isMine = (int) $message->sender_id === (int) $authId)
                     <div class="flex {{ $isMine ? 'justify-end' : 'justify-start' }}">
