@@ -78,6 +78,13 @@ class ChatController extends Controller
             'text' => $data['text']
         ]);
 
+        // Notify the recipient
+        $recipientId = ($conversation->user_one_id === $authId) ? $conversation->user_two_id : $conversation->user_one_id;
+        $recipient = \App\Models\User::find($recipientId);
+        if ($recipient) {
+            $recipient->notify(new \App\Notifications\NewMessageNotification($message));
+        }
+
         // Invalidate conversation-related caches
         cache()->forget("user_conversations_{$conversation->user_one_id}");
         cache()->forget("user_conversations_{$conversation->user_two_id}");
