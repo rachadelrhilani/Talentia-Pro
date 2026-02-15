@@ -16,10 +16,14 @@ class ChatController extends Controller
     public function index()
     {
         $authid = auth()->id();
-        $conversations = Conversation::where('user_one_id', $authid)
-            ->orWhere('user_two_id', $authid)
-            ->with(['userOne', 'userTwo'])
-            ->get();
+        $cacheKey = "user_conversations_{$authid}";
+
+        $conversations = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($authid) {
+            return Conversation::where('user_one_id', $authid)
+                ->orWhere('user_two_id', $authid)
+                ->with(['userOne', 'userTwo'])
+                ->get();
+        });
 
         return view('chat.conversations', ['conversations' => $conversations]);
     }
@@ -74,6 +78,11 @@ class ChatController extends Controller
             'text' => $data['text']
         ]);
 
+        // Invalidate conversation-related caches
+        cache()->forget("user_conversations_{$conversation->user_one_id}");
+        cache()->forget("user_conversations_{$conversation->user_two_id}");
+        cache()->forget("conversation_messages_{$conversation->id}");
+
         event(new MessageSent($message));
 
         return redirect()->route('conversations.show', $conversation->id);
@@ -89,10 +98,14 @@ class ChatController extends Controller
             abort(403, 'Unauthorized conversation access.');
         }
 
-        $messages = $conversation->messages()
-            ->with('sender')
-            ->orderBy('created_at')
-            ->get();
+        $cacheKey = "conversation_messages_{$conversation->id}";
+
+        $messages = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($conversation) {
+            return $conversation->messages()
+                ->with('sender')
+                ->orderBy('created_at')
+                ->get();
+        });
 
         $conversation->load(['userOne', 'userTwo']);
 
