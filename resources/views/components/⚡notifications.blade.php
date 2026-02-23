@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -67,7 +68,8 @@ new class extends Component
         ];
     }
 
-    public function handleNotification($payload)
+    #[On('echo-notification-received')]
+    public function handleNotification($payload = null)
     {
         $user = auth()->user();
         if (!$user) return;
@@ -78,6 +80,9 @@ new class extends Component
 
         $this->notifications = $user->notifications()->latest()->take(10)->get();
         $this->unreadCount = $user->unreadNotifications()->count();
+
+        // Dispatch JS event so the badge shows immediately
+        $this->dispatch('notification-received');
     }
 };
 ?>
@@ -89,8 +94,14 @@ new class extends Component
             viewBox="0 0 24 24">
             <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.91V4a1 1 0 1 0-2 0v1.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z" />
         </svg>
+        <!-- <span id="notifications-badge"
+            class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white {{ $unreadCount < 1 ? 'hidden' : '' }}">
+        </span> -->
         <span id="notifications-badge"
-            class="absolute -top-1 -right-1 min-w-5 h-5 px-1.5 rounded-full bg-red-500 text-white text-[10px] leading-5 text-center font-semibold {{ $unreadCount < 1 ? 'hidden' : '' }}">
+            class="absolute -top-2 -right-2 min-w-[18px] h-[18px] px-1 text-[10px]
+           flex items-center justify-center
+           rounded-full bg-red-500 text-white font-semibold
+           {{ $unreadCount < 1 ? 'hidden' : '' }}">
             {{ $unreadCount }}
         </span>
         <span class="text-[11px] hidden md:block">Notification</span>
