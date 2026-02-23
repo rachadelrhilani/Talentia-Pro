@@ -12,53 +12,70 @@ use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class DashboardController extends Controller
 {
-   public function index()
+    public function index()
     {
         $user = auth()->user();
+        $cacheKey = "user_dashboard_{$user->id}";
 
-        if ($user->hasRole('recruteur')) {
+        $data = cache()->remember($cacheKey, now()->addMinutes(5), function () use ($user) {
+            if ($user->hasRole('recruteur')) {
+                $jobs = Joboffer::withCount('applications')
+                    ->where('user_id', $user->id)
+                    ->latest()
+                    ->take(5)
+                    ->get();
 
-            $jobs = Joboffer::withCount('applications')
-                ->where('user_id', $user->id)
+                $activeJobs = Joboffer::where('user_id', $user->id)
+                    ->where('is_closed', false)
+                    ->count();
+
+                $totalApplications = Application::whereHas('jobOffer', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->count();
+
+                return [
+                    'type' => 'recruteur',
+                    'jobs' => $jobs,
+                    'activeJobs' => $activeJobs,
+                    'totalApplications' => $totalApplications
+                ];
+            }
+
+            $suggestedJobs = Joboffer::where('is_closed', false)
                 ->latest()
                 ->take(5)
                 ->get();
 
-            $activeJobs = Joboffer::where('user_id', $user->id)
-                ->where('is_closed', false)
-                ->count();
+            $friendsCount = Friendship::where(function ($q) use ($user) {
+                $q->where('sender_id', $user->id)
+                    ->orWhere('receiver_id', $user->id);
+            })->where('status', 'accepted')->count();
 
-            $totalApplications = Application::whereHas('jobOffer', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })->count();
+            $suggestedUsers = User::where('id', '!=', $user->id)
+                ->inRandomOrder()
+                ->take(5)
+                ->get();
 
-            return view('dashboards.recruteur', compact(
-                'jobs',
-                'activeJobs',
-                'totalApplications'
-            ));
+            return [
+                'type' => 'candidat',
+                'suggestedJobs' => $suggestedJobs,
+                'friendsCount' => $friendsCount,
+                'suggestedUsers' => $suggestedUsers
+            ];
+        });
+
+        if ($data['type'] === 'recruteur') {
+            return view('dashboards.recruteur', [
+                'jobs' => $data['jobs'],
+                'activeJobs' => $data['activeJobs'],
+                'totalApplications' => $data['totalApplications']
+            ]);
         }
 
-        
-        $suggestedJobs = Joboffer::where('is_closed', false)
-            ->latest()
-            ->take(5)
-            ->get();
-
-        $friendsCount = Friendship::where(function ($q) use ($user) {
-            $q->where('sender_id', $user->id)
-              ->orWhere('receiver_id', $user->id);
-        })->where('status', 'accepted')->count();
-
-        $suggestedUsers = User::where('id','!=',$user->id)
-            ->inRandomOrder()
-            ->take(5)
-            ->get();
-
-        return view('dashboards.candidat', compact(
-            'suggestedJobs',
-            'friendsCount',
-            'suggestedUsers'
-        ));
+        return view('dashboards.candidat', [
+            'suggestedJobs' => $data['suggestedJobs'],
+            'friendsCount' => $data['friendsCount'],
+            'suggestedUsers' => $data['suggestedUsers']
+        ]);
     }
 }

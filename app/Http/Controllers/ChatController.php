@@ -16,10 +16,14 @@ class ChatController extends Controller
     public function index()
     {
         $authid = auth()->id();
-        $conversations = Conversation::where('user_one_id', $authid)
-            ->orWhere('user_two_id', $authid)
-            ->with(['userOne', 'userTwo'])
-            ->get();
+        $cacheKey = "user_conversations_{$authid}";
+
+        $conversations = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($authid) {
+            return Conversation::where('user_one_id', $authid)
+                ->orWhere('user_two_id', $authid)
+                ->with(['userOne', 'userTwo'])
+                ->get();
+        });
 
         return view('chat.conversations', ['conversations' => $conversations]);
     }
@@ -58,7 +62,7 @@ class ChatController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Conversation $conversation): RedirectResponse
+    public function store(Request $request, Conversation $conversation)
     {
         $authId = $request->user()->id;
         if (! in_array($authId, [$conversation->user_one_id, $conversation->user_two_id], true)) {
@@ -66,15 +70,50 @@ class ChatController extends Controller
         }
 
         $data = $request->validate([
-            'text' => ['required', 'string', 'max:2000'],
+            'text' => ['nullable', 'string', 'max:2000'],
+            'attachment' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf,doc,docx', 'max:5120'],
         ]);
+
+        if (empty($data['text']) && !$request->hasFile('attachment')) {
+            return back()->with('error', 'Message or attachment is required.');
+        }
+
+        $attachmentPath = null;
+        $attachmentType = null;
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $attachmentPath = $file->store('chat_attachments', 'public');
+            $attachmentType = $file->getClientOriginalExtension();
+        }
 
         $message = $conversation->messages()->create([
             'sender_id' => $authId,
-            'text' => $data['text']
+            'text' => $data['text'] ?? '',
+            'attachment_path' => $attachmentPath,
+            'attachment_type' => $attachmentType,
         ]);
 
+        // Notify the recipient
+        $recipientId = ($conversation->user_one_id === $authId) ? $conversation->user_two_id : $conversation->user_one_id;
+        $recipient = \App\Models\User::find($recipientId);
+        if ($recipient) {
+            $recipient->notify(new \App\Notifications\NewMessageNotification($message));
+        }
+
+        // Invalidate conversation-related caches
+        cache()->forget("user_conversations_{$conversation->user_one_id}");
+        cache()->forget("user_conversations_{$conversation->user_two_id}");
+        cache()->forget("conversation_messages_{$conversation->id}");
+
         event(new MessageSent($message));
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message->load('sender')
+            ]);
+        }
 
         return redirect()->route('conversations.show', $conversation->id);
     }
@@ -89,10 +128,14 @@ class ChatController extends Controller
             abort(403, 'Unauthorized conversation access.');
         }
 
-        $messages = $conversation->messages()
-            ->with('sender')
-            ->orderBy('created_at')
-            ->get();
+        $cacheKey = "conversation_messages_{$conversation->id}";
+
+        $messages = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($conversation) {
+            return $conversation->messages()
+                ->with('sender')
+                ->orderBy('created_at')
+                ->get();
+        });
 
         $conversation->load(['userOne', 'userTwo']);
 

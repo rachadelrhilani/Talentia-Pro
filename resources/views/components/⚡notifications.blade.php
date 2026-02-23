@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -17,8 +18,16 @@ new class extends Component
             return;
         }
 
-        $this->notifications = $user->notifications()->latest()->take(10)->get();
-        $this->unreadCount = $user->unreadNotifications()->count();
+        $cacheKey = "user_notifications_{$user->id}";
+        $unreadCacheKey = "user_unread_notifications_count_{$user->id}";
+
+        $this->notifications = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($user) {
+            return $user->notifications()->latest()->take(10)->get();
+        });
+
+        $this->unreadCount = cache()->remember($unreadCacheKey, now()->addMinutes(30), function () use ($user) {
+            return $user->unreadNotifications()->count();
+        });
     }
 
     public function togglePanel()
@@ -30,7 +39,8 @@ new class extends Component
         }
     }
 
-    public function justCloseIt(){
+    public function justCloseIt()
+    {
         $this->open = false;
     }
 
@@ -42,8 +52,37 @@ new class extends Component
         }
 
         $user->unreadNotifications->markAsRead();
+
+        // Invalidate notification caches
+        cache()->forget("user_notifications_{$user->id}");
+        cache()->forget("user_unread_notifications_count_{$user->id}");
+
         $this->unreadCount = 0;
         $this->notifications = $user->notifications()->latest()->take(10)->get();
+    }
+    public function getListeners()
+    {
+        $authId = auth()->id();
+        return [
+            "echo-private:App.Models.User.{$authId},.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated" => 'handleNotification',
+        ];
+    }
+
+    #[On('echo-notification-received')]
+    public function handleNotification($payload = null)
+    {
+        $user = auth()->user();
+        if (!$user) return;
+
+        // Invalidate notification caches
+        cache()->forget("user_notifications_{$user->id}");
+        cache()->forget("user_unread_notifications_count_{$user->id}");
+
+        $this->notifications = $user->notifications()->latest()->take(10)->get();
+        $this->unreadCount = $user->unreadNotifications()->count();
+
+        // Dispatch JS event so the badge shows immediately
+        $this->dispatch('notification-received');
     }
 };
 ?>
@@ -55,8 +94,14 @@ new class extends Component
             viewBox="0 0 24 24">
             <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.91V4a1 1 0 1 0-2 0v1.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z" />
         </svg>
+        <!-- <span id="notifications-badge"
+            class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white {{ $unreadCount < 1 ? 'hidden' : '' }}">
+        </span> -->
         <span id="notifications-badge"
-            class="absolute -top-1 -right-1 min-w-5 h-5 px-1.5 rounded-full bg-red-500 text-white text-[10px] leading-5 text-center font-semibold {{ $unreadCount < 1 ? 'hidden' : '' }}">
+            class="absolute -top-2 -right-2 min-w-[18px] h-[18px] px-1 text-[10px]
+           flex items-center justify-center
+           rounded-full bg-red-500 text-white font-semibold
+           {{ $unreadCount < 1 ? 'hidden' : '' }}">
             {{ $unreadCount }}
         </span>
         <span class="text-[11px] hidden md:block">Notification</span>
@@ -68,23 +113,23 @@ new class extends Component
         </div>
         <div id="Ncontainer" class="max-h-80 overflow-y-auto divide-y divide-gray-100">
             @forelse($notifications as $notification)
-                <div class="px-4 py-3.5 flex gap-3 hover:bg-gray-50 transition">
-                    <div class="h-9 w-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold shrink-0">
-                        {{ strtoupper(substr($notification->data['message'] ?? 'N', 0, 1)) }}
+            <div class="px-4 py-3.5 flex gap-3 hover:bg-gray-50 transition">
+                <div class="h-9 w-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold shrink-0">
+                    {{ strtoupper(substr($notification->data['message'] ?? 'N', 0, 1)) }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm text-gray-800 leading-5">
+                        {{ $notification->data['message'] ?? 'Notification' }}
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="text-sm text-gray-800 leading-5">
-                            {{ $notification->data['message'] ?? 'Notification' }}
-                        </div>
-                        <div class="text-xs text-gray-500 mt-1">
-                            {{ optional($notification->created_at)->diffForHumans() }}
-                        </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        {{ optional($notification->created_at)->diffForHumans() }}
                     </div>
                 </div>
+            </div>
             @empty
-                <div class="px-4 py-6 text-sm text-gray-500 text-center">
-                    Aucune notification.
-                </div>
+            <div class="px-4 py-6 text-sm text-gray-500 text-center">
+                Aucune notification.
+            </div>
             @endforelse
         </div>
     </div>

@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Message extends Model
 {
     //
-    protected $fillable =['sender_id',
+    protected $fillable = [
+        'sender_id',
         'conversation_id',
-        'text'
-        ];
+        'text',
+        'attachment_path',
+        'attachment_type'
+    ];
 
 
     public function conversation()
@@ -21,6 +24,6 @@ class Message extends Model
 
     public function sender(): BelongsTo
     {
-        return $this->belongsTo(User::class,'sender_id');
+        return $this->belongsTo(User::class, 'sender_id');
     }
 }
